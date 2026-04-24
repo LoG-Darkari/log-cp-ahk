@@ -1,9 +1,2 @@
-#Include %A_ScriptDir%\src\cp_auth.ahk
-#Include %A_ScriptDir%\src\cp_actions.ahk
-#Include %A_ScriptDir%\src\cp_skins.ahk
-#Include %A_ScriptDir%\src\cp_activity.ahk
-#Include %A_ScriptDir%\src\cp_premium.ahk
-#Include %A_ScriptDir%\src\cp_absent.ahk
-#Include %A_ScriptDir%\src\cp_vehicles.ahk
-#Include %A_ScriptDir%\src\cp_team.ahk
-#Include %A_ScriptDir%\src\json.ahk
+#Include %A_ScriptDir%\src\samp.ahk
+#Include %A_ScriptDir%\src\cp_core.ahk
