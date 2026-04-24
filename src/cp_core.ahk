@@ -24,7 +24,7 @@ cp_Login() {
     pw := cp_UrlEncode(pw)
 
     payload := "user=" user "&password=" pw "&login=Login"
-    response := cp_Request("POST", "https://samp.cp.life-of-german.org/login", payload)
+    response := http_Request("POST", "https://samp.cp.life-of-german.org/login", payload)
 
     if (InStr(response.text, "Gespielte Stunden:")) {
         CP.LoggedIn := true
@@ -38,13 +38,13 @@ cp_Login() {
 }
 
 cp_Logout() {
-    cp_Request("GET", "https://samp.cp.life-of-german.org/logout")
+    http_Request("GET", "https://samp.cp.life-of-german.org/logout")
     ;AddChatMessage("Logout durchgeführt")
     CP.LoggedIn := false
     http_Destroy()
 }
 
-cp_Request(method, endpoint, payload := "") {
+http_Request(method, endpoint, payload := "") {
     url :=  endpoint
 
     CP.Session.Open(method, url, 0)
@@ -73,17 +73,4 @@ cp_UrlEncode(str) {
             out .= "%" . SubStr("0" . Format("{:X}", c), -1)
     }
     return out
-}
-
-PlayerInput(text){
-s := A_IsSuspended
-Suspend On
-KeyWait Enter
-SendInput t^a{backspace}%text%
-Input, var, v, {enter}
-SendInput ^a{backspace 100}{enter}
-Sleep, 20
-if(!s)
-Suspend Off
-return var
 }
