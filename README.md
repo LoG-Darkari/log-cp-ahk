@@ -5,13 +5,13 @@ Life-of-German Control Panel.
 
 ## Features
 
-[DONE] - CP Login / Logout 
-[DONE] - CP/HTTP Requests (GET/POST) 
+- [DONE] - CP Login / Logout 
+- [DONE] - CP/HTTP Requests (GET/POST) 
 - Skin-System
-- Activity-Points
-[DONE] - Premium-Status
+- Faction-Activity-Points
+- [DONE] - Premium-Status
 - Abwesenheitsmeldung
 - Fahrzeugliste + Parkposition
-[WIP] - Teamliste + Rollen
-- JSON-Handling
+- [WIP] - Teamliste + Rollen
+
 
