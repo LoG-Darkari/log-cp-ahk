@@ -6,7 +6,7 @@ Payload 		:= "payer=0&payee=0&payeeUser=" recipient "&money=" amount "&additiona
 
 If (recipient = "")
 {
-    AddChatMessage("{B22222} FEHLER: {FFFFFF} Empfänger darf nicht leer sein!")
+    AddChatMessage("{B22222} FEHLER: {FFFFFF} Empfï¿½nger darf nicht leer sein!")
     Return false
 }
 If recipient is digit 
@@ -20,9 +20,15 @@ If recipient is digit
    recipient := GetPlayerNameById(recipient)
    if (recipient = GetPlayerName())
    {
-     AddChatMessage("{B22222} FEHLER: {FFFFFF} Du kannst dir selbst nichts überweisen.")
+     AddChatMessage("{B22222} FEHLER: {FFFFFF} Du kannst dir selbst nichts ï¿½berweisen.")
   
    }
+   If (recipient = "")
+{
+    AddChatMessage("{B22222} FEHLER: {FFFFFF} Die eingegebene ID ist ungÃ¼ltig")
+    Return false
+}
+
 
 }
 if (Amount < 1 OR Amount  > 20000000)
@@ -32,7 +38,7 @@ if (Amount < 1 OR Amount  > 20000000)
 }
 if Amount is not digit
 {
-    AddChatMessage("{B22222} FEHLER: {FFFFFF} Betrag ungültig")
+    AddChatMessage("{B22222} FEHLER: {FFFFFF} Betrag ungï¿½ltig")
     Return false
 }
 if (!CP.LoggedIn)

@@ -7,7 +7,7 @@ OnError(LogError)
 
 class LogError {
     Call(exc) {
-        FileAppend % "Error on line " exc.Line ": " exc.Message "`n", errorlog.txt
+        FileAppend % "Error on line " exc.Line ": " exc.Message "`n", error.log
         return true
     }
 }
@@ -60,4 +60,20 @@ Sleep, 250
 recipient := PlayerInput("Empfänger: ")
 amount := PlayerInput("Betrag: ")
 cpu(recipient, amount, "")
+Return
+
+:?:/premium::
+Sleep, 200
+txt := cp_getPremium()
+AddChatMessage("TXT"StrLen(txt))
+diatxt := BuildPremiumDialog(txt)
+AddChatMessage(StrLen(diatxt))
+ShowDialog(5,"Permiumübersicht", diatxt, "Schließen")
+Return
+
+:?:/pl::
+Sleep, 200
+txt := GetActivePremium(cp_getPremium())
+prm := StrSplit(txt, " | ")
+AddChatMessage("Dein " prm[2] " läuft am " prm[3] " ab.")
 Return
