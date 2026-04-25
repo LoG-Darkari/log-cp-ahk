@@ -7,11 +7,27 @@ Life-of-German Control Panel.
 
 - [DONE] - CP Login / Logout 
 - [DONE] - CP/HTTP Requests (GET/POST) 
-- Skin-System
-- Faction-Activity-Points
-- [DONE] - Premium-Status
+- [DONE] - CP Überweisung
+- [DONE] - FAPs-Liste
+- [DONE] - Premium-Status / Laufzeit
+- [DONE] - Bizliste
+- [DONE] - House Info
+- [DONE] - Fraktion Info
+- [DONE] - Waffenbestand
+- [DONE] - Fahrzeugliste
+- [DONE] - Frationsmemberliste
+- [WIP] - Teamliste + Rollen + Online Status
+- [WIP] - Leaderliste 
 - Abwesenheitsmeldung
-- Fahrzeugliste + Parkposition
-- [WIP] - Teamliste + Rollen
+- Skin wecheln Zivi/Fraktion
+- Letzte X Einträge im Geld-LoG
+- Ticket erstellen (Premium kaufen)
+- Gangwar Liste
+- Funktionen für Biz-Besitzer
+- Funktionen für Leader
+- Updater
+- Dynamische Auswertung welche Funktionen benutzbar sin anhand von Fraktion/Rang/ Menüpunkten im CP.
+
+
 
 
