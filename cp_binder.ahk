@@ -65,11 +65,7 @@ Return
 :?:/premium::
 Sleep, 200
 txt := cp_getPremium()
-;AddChatMessage("TXT"StrLen(txt))
 diatxt := BuildPremiumDialog(txt)
-FileDelete, dia.log
-FileAppend, %diatxt%, dia.log
-;AddChatMessage(StrLen(diatxt))
 ShowDialog(5,"Permium¸bersicht", diatxt, "Schlieﬂen")
 Return
 
@@ -101,3 +97,83 @@ Return
 Sleep, 50
 AddChatMessage("Farbtest: {CD7F32}Bronze - {C0C0C0}Silber - {FFD700}Gold - {868279}Platin")
 Return
+
+:?:/wlbestand::
+Sleep, 200
+txt := cp_getWeaponstore()
+diatxt := BuildWeaponstoreDialog(txt)
+ShowDialog(5,"Waffenlager Bestand", diatxt, "Schlieﬂen")
+Return
+
+:?:/faps::
+Sleep, 200
+diatxt := cp_getFaps()
+diatxt := BuildActivityDialog(diatxt)
+ShowDialog(5,"Fraktionsaktivit‰tspunkte", diatxt, "Schlieﬂen")
+Return
+
+:?:/bfl::
+Sleep, 200
+diatxt := cp_getBizlist()
+diatxt := BuildBusinessDialog(diatxt)
+ShowDialog(5,"Busineesinfo", diatxt, "Schlieﬂen")
+Return
+
+:?:/fml::
+Sleep, 200
+diatxt := cp_getFMembers()
+diatxt := BuildFactionMemberDialog(diatxt)
+ShowDialog(5,"Fraktionsmember", diatxt, "Schlieﬂen")
+Return
+
+:?:/fvl::
+Sleep, 200
+diatxt := cp_getFVehicles()
+diatxt := BuildFactionVehicleDialog(diatxt)
+ShowDialog(5,"Fraktionsfahrzeuge", diatxt, "Schlieﬂen")
+Return
+
+:?:/hinfo::
+Sleep, 200
+diatxt := cp_getHouse()
+diatxt := BuildHouseDialog(diatxt)
+ShowDialog(5,"Hausinformationen", diatxt, "Schlieﬂen")
+Return
+
+:?:/finfo::
+Sleep, 200
+diatxt := cp_getFInfo()
+diatxt := BuildFactionInfoDialog(diatxt)
+ShowDialog(5,"Fraktionsinformationen", diatxt, "Schlieﬂen")
+Return
+
+:?:/fkinfo::
+Sleep, 200
+diatxt := cp_getFInfo()
+fkasse := ParseFactionInfo(diatxt)
+fraks := initFraks()
+color := fraks[fkasse["Name"]]
+faction := fkasse["Name"]
+AddChatMessage("{006EE6} [CP]: {FFFFFF}Auf der Fraktionskasse ({"color "}" faction "{FFFFFF}) befinden sich aktuell: " fkasse["Kasse"])
+Return
+
+initFraks()
+{
+frak := {}
+frak.insert("San Andreas Logistik und Abschleppdienst","FFFF00")
+frak.insert("Los Santos Police Department","6495ED")
+frak.insert("Federal Bureau of Investigation","1111FF")
+frak.insert("United States Army","33CC00")
+frak.insert("Front Yard Ballas","660066")
+frak.insert("Grove Street Families","006600")
+frak.insert("Russen Mafia","666666")
+frak.insert("Triaden Mafia","FFFF80")
+frak.insert("Terroristen","795F37")
+frak.insert("San Andreas Abschlepp- und Pannendienst","CC9966")
+frak.insert("Los Santos Medical Department","ZF3333")
+frak.insert("Hitman","993300")
+frak.insert("Yakuza Mafia","DB7B9D")
+frak.insert("Bodyguard", "FD824D")
+
+Return frak
+}

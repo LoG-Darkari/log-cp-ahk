@@ -2,3 +2,10 @@
 #Include %A_ScriptDir%\src\cp_core.ahk
 #Include %A_ScriptDir%\src\cp_banking.ahk
 #Include %A_ScriptDir%\src\cp_premium.ahk
+#Include %A_ScriptDir%\src\cp_weaponstore.ahk
+#Include %A_ScriptDir%\src\cp_faps.ahk
+#Include %A_ScriptDir%\src\cp_bizfight.ahk
+#Include %A_ScriptDir%\src\cp_f_members.ahk
+#Include %A_ScriptDir%\src\cp_f_vehicles.ahk
+#Include %A_ScriptDir%\src\cp_houseinfo.ahk
+#Include %A_ScriptDir%\src\cp_f_info.ahk

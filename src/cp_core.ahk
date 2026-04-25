@@ -65,11 +65,11 @@ http_Request(method, endpoint, payload := "") {
 
     CP.Session.WaitForResponse()
     var := CP.Session.ResponseText()
-    If (url = "https://samp.cp.life-of-german.org/home/premiumduration")
+    If (url ""= "https://samp.cp.life-of-german.org/login")
     {
     var := CP.Session.ResponseText()
-    ;FileDelete, response.log
-    ;FileAppend, %var% , response.log
+    FileDelete, response.log
+    FileAppend, %var% , response.log
     }
 
     ;return { text: CP.Session.ResponseText(), status: CP.Session.Status }
