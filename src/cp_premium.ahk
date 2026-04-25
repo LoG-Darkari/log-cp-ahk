@@ -36,9 +36,9 @@ GetActivePremium(html)
 
 BuildPremiumDialog(html)
 {
-        AddChatMessage("HTML: "strlen(html))
-    FileDelete, html.log
-    FileAppend, %html% , html.log
+    ;AddChatMessage("HTML: "strlen(html))
+    ;FileDelete, html.log
+    ;FileAppend, %html% , html.log
     rows := []
 
     ; Alle <tr> Zeilen finden
@@ -83,8 +83,8 @@ cp_getPremium()
 {
     cp_Login()
     response := http_Request("GET","https://samp.cp.life-of-german.org/home/premiumduration","")
-    AddChatMessage("Reponse Länge - " StrLen(response))
+    ;AddChatMessage("Reponse Länge - " StrLen(response))
     cp_Logout()
-    AddChatMessage("CP logout")
+    ;AddChatMessage("CP logout")
     return response
 }

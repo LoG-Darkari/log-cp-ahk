@@ -65,9 +65,11 @@ Return
 :?:/premium::
 Sleep, 200
 txt := cp_getPremium()
-AddChatMessage("TXT"StrLen(txt))
+;AddChatMessage("TXT"StrLen(txt))
 diatxt := BuildPremiumDialog(txt)
-AddChatMessage(StrLen(diatxt))
+FileDelete, dia.log
+FileAppend, %diatxt%, dia.log
+;AddChatMessage(StrLen(diatxt))
 ShowDialog(5,"Permiumübersicht", diatxt, "Schließen")
 Return
 
@@ -75,5 +77,27 @@ Return
 Sleep, 200
 txt := GetActivePremium(cp_getPremium())
 prm := StrSplit(txt, " | ")
-AddChatMessage("Dein " prm[2] " läuft am " prm[3] " ab.")
+ablauf := StrSplit(prm[3], " - ")
+If (InStr(prm[2], "Bronze"))
+{
+color := "{CD7F32}"
+}
+If (InStr(prm[2], "Gold"))
+{
+ color := "{FFD700}"
+}
+If (InStr(prm[2], "Silber"))
+{
+color :=   "{C0C0C0}"
+}
+If (InStr(prm[2], "Platin"))
+{
+color := "{868279}"
+}
+AddChatMessage("{006EE6} [CP]: {FFFFFF}Dein "color ""prm[2] "{FFFFFF} läuft am " ablauf[1] " um "ablauf[2]" Uhr ab.")
+Return
+
+:?:/ct::
+Sleep, 50
+AddChatMessage("Farbtest: {CD7F32}Bronze - {C0C0C0}Silber - {FFD700}Gold - {868279}Platin")
 Return

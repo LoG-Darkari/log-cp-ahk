@@ -3,45 +3,51 @@
 ; ============================================================
 
 global CP := { LoggedIn: false, Session: "" }
+global CP_PW := ""
 
 http_init() {
     CP.Session := ComObjCreate("WinHttp.WinHttpRequest.5.1")
     CP.Session.SetTimeouts(6000,6000,6000,6000)
-    AddChatMessage("HTTP-Objekt erstellt")
+    ;AddChatMessage("HTTP-Objekt erstellt")
 }
 
 http_Destroy() {
     ;CP.Session.Close()
     ObjRelease(CP.Session)
     CP.Session := ""
-    AddChatMessage("HTTP-Objekt zerstört")
+    ;AddChatMessage("HTTP-Objekt zerstört")
 }
 
 cp_Login() {
     http_init()
 
     user := GetPlayerName()
-    pw := PlayerInput("CP-Passwort: ")
-    pw := cp_UrlEncode(pw)
+    If (CP_PW == "")
+    {
+    CP_PW := PlayerInput("CP-Passwort: ")
+    CP_PW := cp_UrlEncode(CP_PW)
+    }
+   
 
-    payload := "user=" user "&password=" pw "&login=Login"
+    payload := "user=" user "&password=" CP_PW "&login=Login"
     response := http_Request("POST", "https://samp.cp.life-of-german.org/login", payload)
 
-    if (InStr(response.text, "Gespielte Stunden:")) {
+    if (InStr(response, "Gespielte Stunden:")) {
         CP.LoggedIn := true
-        AddChatMessage("CP: Login erfolgreich")
+        ;AddChatMessage("{006EE6} [CP]: {FFFFFF} Login erfolgreich")
         return { success: true, message: "Login erfolgreich" }
     }
 
     CP.LoggedIn := false
-    AddChatMessage("Login nicht erfolgreich")
+    AddChatMessage("{006EE6} [CP]: {FFFFFF} Login nicht erfolgreich. Nach mehreren Fehlversuchen wirst du 24h gesperrt.")
+    CP_PW := ""
     return { success: false, message: "Login fehlgeschlagen" }
 }
 
 
 cp_Logout() {
     http_Request("GET", "https://samp.cp.life-of-german.org/logout")
-    AddChatMessage("Logout durchgeführt")
+    ;AddChatMessage("Logout durchgeführt")
     CP.LoggedIn := false
     http_Destroy()
 }
@@ -62,7 +68,8 @@ http_Request(method, endpoint, payload := "") {
     If (url = "https://samp.cp.life-of-german.org/home/premiumduration")
     {
     var := CP.Session.ResponseText()
-    FileAppend, %var% , response.log
+    ;FileDelete, response.log
+    ;FileAppend, %var% , response.log
     }
 
     ;return { text: CP.Session.ResponseText(), status: CP.Session.Status }
