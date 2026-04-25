@@ -8,14 +8,11 @@ global CP_PW := ""
 http_init() {
     CP.Session := ComObjCreate("WinHttp.WinHttpRequest.5.1")
     CP.Session.SetTimeouts(6000,6000,6000,6000)
-    ;AddChatMessage("HTTP-Objekt erstellt")
 }
 
 http_Destroy() {
-    ;CP.Session.Close()
     ObjRelease(CP.Session)
     CP.Session := ""
-    ;AddChatMessage("HTTP-Objekt zerstört")
 }
 
 cp_Login() {
@@ -34,7 +31,6 @@ cp_Login() {
 
     if (InStr(response, "Gespielte Stunden:")) {
         CP.LoggedIn := true
-        ;AddChatMessage("{006EE6} [CP]: {FFFFFF} Login erfolgreich")
         return { success: true, message: "Login erfolgreich" }
     }
 
@@ -47,7 +43,6 @@ cp_Login() {
 
 cp_Logout() {
     http_Request("GET", "https://samp.cp.life-of-german.org/logout")
-    ;AddChatMessage("Logout durchgeführt")
     CP.LoggedIn := false
     http_Destroy()
 }
@@ -65,14 +60,12 @@ http_Request(method, endpoint, payload := "") {
 
     CP.Session.WaitForResponse()
     var := CP.Session.ResponseText()
-    If (url ""= "https://samp.cp.life-of-german.org/login")
+    if (InStr(var, "Du besitzt nicht die nötigen Rechte um diese Seite aufrufen zu können!"))
     {
-    var := CP.Session.ResponseText()
-    FileDelete, response.log
-    FileAppend, %var% , response.log
+        AddChatMessage("{006EE6} CP {FFFFFF} Diese Seite ist für dich leider nicht Verfügbar")
+        Return
     }
 
-    ;return { text: CP.Session.ResponseText(), status: CP.Session.Status }
     Return var
 }
 
@@ -89,4 +82,12 @@ cp_UrlEncode(str) {
             out .= "%" . SubStr("0" . Format("{:X}", c), -1)
     }
     return out
+}
+
+cp_request(method,url, payload := "")
+{
+    cp_Login()
+    response := http_Request(method,url, payload)
+    cp_Logout()
+    return response
 }

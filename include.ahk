@@ -9,3 +9,5 @@
 #Include %A_ScriptDir%\src\cp_f_vehicles.ahk
 #Include %A_ScriptDir%\src\cp_houseinfo.ahk
 #Include %A_ScriptDir%\src\cp_f_info.ahk
+#Include %A_ScriptDir%\src\team.ahk
+#Include %A_ScriptDir%\src\factions.ahk

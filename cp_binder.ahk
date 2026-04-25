@@ -95,7 +95,7 @@ Return
 
 :?:/ct::
 Sleep, 50
-AddChatMessage("Farbtest: {CD7F32}Bronze - {C0C0C0}Silber - {FFD700}Gold - {868279}Platin")
+AddChatMessage("{FFFFFF}Farbtest: {CD7F32}Bronze - {C0C0C0}Silber - {FFD700}Gold - {868279}Platin")
 Return
 
 :?:/wlbestand::
@@ -170,10 +170,34 @@ frak.insert("Russen Mafia","666666")
 frak.insert("Triaden Mafia","FFFF80")
 frak.insert("Terroristen","795F37")
 frak.insert("San Andreas Abschlepp- und Pannendienst","CC9966")
-frak.insert("Los Santos Medical Department","ZF3333")
-frak.insert("Hitman","993300")
+frak.insert("Los Santos Medical Department","FF3333")
+frak.insert("Hitman Agency","993300")
 frak.insert("Yakuza Mafia","DB7B9D")
 frak.insert("Bodyguard", "FD824D")
 
 Return frak
 }
+
+:?:/teamol::
+Sleep, 200
+diatxt := BuildTeamOL()
+ShowDialog(5,"Team Online Liste", diatxt, "Schlieﬂen")
+Return
+
+:?:/tl::
+Sleep, 200
+diatxt := BuildTeamDialog()
+ShowDialog(5,"Teamliste", diatxt, "Schlieﬂen")
+Return
+
+:?:/leaderol::
+Sleep, 200
+diatxt := BuildLeaderOL()
+ShowDialog(5,"Leader Online Liste", diatxt, "Schlieﬂen")
+Return
+
+:?:/leader::
+Sleep, 200
+diatxt := BuildLeaderDialog()
+ShowDialog(5,"Leaderliste", diatxt, "Schlieﬂen")
+Return

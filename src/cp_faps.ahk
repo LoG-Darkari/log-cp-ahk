@@ -47,8 +47,6 @@ cp_getFaps()
 {
     cp_Login()
     response := http_Request("GET","https://samp.cp.life-of-german.org/faction/activitypoints","")
-    ;AddChatMessage("Reponse Länge - " StrLen(response))
     cp_Logout()
-    ;AddChatMessage("CP logout")
     return response
 }

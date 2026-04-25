@@ -83,9 +83,7 @@ cp_getPremium()
 {
     cp_Login()
     response := http_Request("GET","https://samp.cp.life-of-german.org/home/premiumduration","")
-    ;AddChatMessage("Reponse Länge - " StrLen(response))
     cp_Logout()
-    ;AddChatMessage("CP logout")
     return response
 }
 
