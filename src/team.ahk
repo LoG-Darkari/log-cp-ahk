@@ -24,6 +24,7 @@ BuildTeamObjects()
     Add(team, "Airmake",       "Support",                          "",     "")
     Add(team, "Paaqo",         "Support",                          "",     "")
     Add(team, "Skrillex",      "Support",                          "",     "")
+    Add(team, "Monsta.",   "Social Media",                     "",     "")
     Add(team, "Manipulate.",   "Social Media",                     "",     "")
     Add(team, "Pseudobaer",    "Social Media",                     "",     "")
 

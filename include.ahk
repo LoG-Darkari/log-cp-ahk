@@ -11,3 +11,5 @@
 #Include %A_ScriptDir%\src\cp_f_info.ahk
 #Include %A_ScriptDir%\src\team.ahk
 #Include %A_ScriptDir%\src\factions.ahk
+#Include %A_ScriptDir%\src\cp_moneylog.ahk
+#Include %A_ScriptDir%\src\cp_tickets.ahk

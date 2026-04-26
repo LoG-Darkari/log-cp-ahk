@@ -90,6 +90,13 @@ If (InStr(prm[2], "Platin"))
 {
 color := "{868279}"
 }
+If (InStr(prm[3], "unbegrenzt"))
+{
+AddChatMessage("{006EE6} [CP]: {FFFFFF}Dein "color ""prm[2] "{FFFFFF} l‰uft nicht ab.")
+Return
+
+}
+Else
 AddChatMessage("{006EE6} [CP]: {FFFFFF}Dein "color ""prm[2] "{FFFFFF} l‰uft am " ablauf[1] " um "ablauf[2]" Uhr ab.")
 Return
 
@@ -200,4 +207,118 @@ Return
 Sleep, 200
 diatxt := BuildLeaderDialog()
 ShowDialog(5,"Leaderliste", diatxt, "Schlieﬂen")
+Return
+
+
+:?:/plt::
+Sleep, 200
+txt := "Aktiv | Premium Plus (jetzt Silber) (Lifetime) | lifetime (unbegrenzt)"
+prm := StrSplit(txt, " | ")
+ablauf := StrSplit(prm[3], " - ")
+If (InStr(prm[2], "Bronze"))
+{
+color := "{CD7F32}"
+}
+If (InStr(prm[2], "Gold"))
+{
+ color := "{FFD700}"
+}
+If (InStr(prm[2], "Silber"))
+{
+color :=   "{C0C0C0}"
+}
+If (InStr(prm[2], "Platin"))
+{
+color := "{868279}"
+}
+If (InStr(prm[3], "unbegrenzt"))
+{
+AddChatMessage("{006EE6} [CP]: {FFFFFF}Dein "color ""prm[2] "{FFFFFF} l‰uft nicht ab.")
+Return
+
+}
+
+Else
+{
+    AddChatMessage("{006EE6} [CP]: {FFFFFF}Dein "color ""prm[2] "{FFFFFF} l‰uft am " ablauf[1] " um "ablauf[2]" Uhr ab.")
+Return
+}
+
+
+:?:/mlog::
+timefrom := A_Now
+Sleep, 200
+If (CP_PW == "")
+    {
+    CP_PW := PlayerInput("CP-Passwort: ")
+    CP_PW := cp_UrlEncode(CP_PW)
+    }
+BlockInput, On
+BlockChatInput()
+txt := cp_money_log()
+diatxt := BuildMoneyLogDialog(txt)
+;AddChatMessage(StrLen(diatxt))
+If (StrLen(diatxt) > 4096)
+{
+    AddChatMessage("{B22222} FEHLER: {FFFFFF} Der Geldlog ist zu groﬂ zum Anzeigen")
+}
+Else
+{
+ShowDialog(5,"Geld-LoG", diatxt, "Schlieﬂen")
+}
+UnBlockChatInput()
+BlockInput, Off
+Return
+
+:?:/cc::
+Loop, 100
+    AddChatMessage("")
+Return
+
+:?:/paydays::
+Sleep, 200
+If (CP_PW == "")
+    {
+    CP_PW := PlayerInput("CP-Passwort: ")
+    CP_PW := cp_UrlEncode(CP_PW)
+    }
+BlockInput, On
+BlockChatInput()
+txt := cp_money_log()
+diatxt := BuildPaydayLogDialog(txt)
+;AddChatMessage(StrLen(diatxt))
+If (StrLen(diatxt) > 4096)
+{
+    AddChatMessage("{B22222} FEHLER: {FFFFFF} Der Geldlog ist zu groﬂ zum Anzeigen")
+}
+Else
+{
+ShowDialog(5,"Geld-LoG", diatxt, "Schlieﬂen")
+}
+UnBlockChatInput()
+BlockInput, Off
+Return
+
+:?:/ticketlist::
+Sleep, 200
+If (CP_PW == "")
+    {
+    CP_PW := PlayerInput("CP-Passwort: ")
+    CP_PW := cp_UrlEncode(CP_PW)
+    }
+BlockInput, On
+BlockChatInput()
+txt := cp_getTickets()
+diatxt := BuildTicketDialog(txt)
+;AddChatMessage(StrLen(diatxt))
+If (StrLen(diatxt) > 4096)
+{
+    AddChatMessage("{B22222} FEHLER: {FFFFFF} Der Geldlog ist zu groﬂ zum Anzeigen")
+}
+Else
+{
+ShowDialog(5,"Geld-LoG", diatxt, "Schlieﬂen")
+}
+UnBlockChatInput()
+BlockInput, Off
 Return
