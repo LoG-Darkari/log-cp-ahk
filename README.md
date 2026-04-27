@@ -16,11 +16,11 @@ Life-of-German Control Panel.
 - [DONE] - Waffenbestand
 - [DONE] - Fahrzeugliste
 - [DONE] - Frationsmemberliste
-- [WIP] - Teamliste + Rollen + Online Status
-- [WIP] - Leaderliste 
-- Abwesenheitsmeldung
+- [DONE]  - Teamliste + Rollen + Online Status
+- [DONE] - Leaderliste 
 - Skin wecheln Zivi/Fraktion
-- Letzte X Einträge im Geld-LoG
+- [DONE] Letzte 50 Einträge im Geld-LoG
+- [DONE] Ticketliste aus CP anzeigen
 - Ticket erstellen (Premium kaufen)
 - Gangwar Liste
 - Funktionen für Biz-Besitzer
