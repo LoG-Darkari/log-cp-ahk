@@ -130,7 +130,7 @@ Return
 Sleep, 200
 diatxt := cp_getFMembers()
 diatxt := BuildFactionMemberDialog(diatxt)
-ShowDialog(5,"Fraktionsmember", diatxt, "Schließen")
+ShowDialog(5,"Fraktionsmitglieder", diatxt, "Schließen")
 Return
 
 :?:/fvl::
@@ -188,7 +188,7 @@ Return frak
 :?:/teamol::
 Sleep, 200
 diatxt := BuildTeamOL()
-ShowDialog(5,"Team Online Liste", diatxt, "Schließen")
+ShowDialog(5,"Team-Online-Liste", diatxt, "Schließen")
 Return
 
 :?:/tl::
@@ -200,7 +200,7 @@ Return
 :?:/leaderol::
 Sleep, 200
 diatxt := BuildLeaderOL()
-ShowDialog(5,"Leader Online Liste", diatxt, "Schließen")
+ShowDialog(5,"Leader-Online-Liste", diatxt, "Schließen")
 Return
 
 :?:/leader::
@@ -293,7 +293,7 @@ If (StrLen(diatxt) > 4096)
 }
 Else
 {
-ShowDialog(5,"Geld-LoG", diatxt, "Schließen")
+ShowDialog(5,"Paydays", diatxt, "Schließen")
 }
 UnBlockChatInput()
 BlockInput, Off
@@ -317,7 +317,7 @@ If (StrLen(diatxt) > 4096)
 }
 Else
 {
-ShowDialog(5,"Geld-LoG", diatxt, "Schließen")
+ShowDialog(5,"Ticketübersicht", diatxt, "Schließen")
 }
 UnBlockChatInput()
 BlockInput, Off

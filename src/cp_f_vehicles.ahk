@@ -51,9 +51,20 @@ BuildFactionVehicleDialog(html)
 
     dialog := "ID`tFahrzeug`tRang`n"
     for index, obj in rows
-        dialog .= obj.ID "`t" obj.Vehicle "`t" obj.Rang "`n"
+    {
+        color := "{FFFFFF}"
+        If (InStr(obj.Vehicle, "(abgeschleppt)"))
+        {
+                color := "{FFFF00}"
+        }
+       
+        dialog .= obj.ID "`t" 
+                . color obj.Vehicle "`t{FFFFFF}" 
+                . obj.Rang "`n"
 
-    return dialog
+    
+}
+return dialog
 }
 
 

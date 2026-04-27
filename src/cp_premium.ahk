@@ -65,8 +65,28 @@ BuildPremiumDialog(html)
         status  := cols[1]
         produkt := cols[2]
         ablauf  := cols[5]
+        
+        If (status == "Aktiv")
+        {
+        status  := StrReplace(status, "Aktiv" , "{32CD32}"status)
+        }
+        If (status == "Inaktiv") 
+        {
+        status  := StrReplace(status, "Inaktiv" , "{C41E3A}"status)
+        }
+        If (status == "Ausgelaufen") 
+        {
+        status  := StrReplace(status, "Ausgelaufen" , "{696969}"status)
+        }
+        produkt  := StrReplace(produkt, "Premium Bronze" , "{CD7F32}Premium Bronze")
+        produkt := StrReplace(produkt, "Premium Gold" , "{FFD700}Premium Gold")
+        produkt  := StrReplace(produkt, "Premium Silber" , "{C0C0C0}Premium Silber")
+        produkt  := StrReplace(produkt, "Premium Platin" , "{868279}Premium Platin")
+        
+        produkt  := StrReplace(produkt, "Premium Plus (" , "{C0C0C0}Premium Plus (")
+        produkt := StrReplace(produkt, "Premium (" , "{868279}Premium Bronze (")
 
-        rows.Push(status "`t" produkt "`t" ablauf)
+        rows.Push(status "`t" produkt "`t{FFFFFF}" ablauf)
     }
 
     ; Dialogstring bauen

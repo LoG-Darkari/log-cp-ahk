@@ -3,7 +3,7 @@ BuildLeaderObjects()
     factions := []
 
     AddFaction(factions, "Los Santos Police Department", "xKORE", "6495ED")
-    AddFaction(factions, "Federal Bureau of Investigation", "JohnHunt", "1111FF")
+    AddFaction(factions, "Federal Bureau of Investigation", "JohnHunt", "1111FF") ;1111FF 1650BB
     AddFaction(factions, "United States Army", "AirMake", "33CC00")
     AddFaction(factions, "United States Army", "aviate", "33CC00")
     AddFaction(factions, "Los Santos Medical Department", ".NoNaMe", "FF3333")

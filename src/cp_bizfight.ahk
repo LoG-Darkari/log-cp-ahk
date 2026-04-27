@@ -25,7 +25,7 @@ ParseBusinessInfo(html)
             cols.Push(text)
         }
 
-        ; Header-Zeilen Ã¼berspringen
+        ; Header-Zeilen überspringen
         if (cols.MaxIndex() < 4)
             continue
 
@@ -33,11 +33,17 @@ ParseBusinessInfo(html)
         besitzer   := cols[2]
         schutzgeld := cols[3]
 
-        ; Angriff mÃ¶glich aus Icon erkennen
+        schutzgeld  := StrReplace(schutzgeld, "Niemand" , "{6495ED}Los Santos Police Department")
+        schutzgeld  := StrReplace(schutzgeld, "Grove Street Families" , "{006600}Grove Street Families")
+        schutzgeld  := StrReplace(schutzgeld, "Front Yard Ballas" , "{660066}Front Yard Ballas")
+        schutzgeld  := StrReplace(schutzgeld, "Triaden Mafia" , "{FFFF80}Triaden Mafia")
+        schutzgeld  := StrReplace(schutzgeld, "Yakuza Mafia" , "{DB7B9D}Yakuza Mafia")
+        schutzgeld  := StrReplace(schutzgeld, "Russen Mafia" , "{666666}Russen Mafia")
+        ; Angriff möglich aus Icon erkennen
         if InStr(tr, "circle_green")
-            angriff := "Ja"
+        angriff := "{32CD32}Angriff möglich"
         else
-            angriff := "Nein"
+        angriff := "{C41E3A}Angriff nicht möglich"
 
         items.Push(business "`t" besitzer "`t" schutzgeld "`t" angriff)
     }
