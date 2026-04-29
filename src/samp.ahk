@@ -192,7 +192,7 @@ global bInitZaC                             := 0
 global iRefreshScoreboard                   := 0
 global oScoreboardData                      := ""
 global iRefreshHandles                      := 0
-global iUpdateTick                          := 2500 ;time in ms, used for GetPlayerNameById etc. to refresh data
+global iUpdateTick                          := 1000 ;time in ms, used for GetPlayerNameById etc. to refresh data
 
 global PI           := 4 * ATan(1)
 global PI_IN_DEG    := 180.0

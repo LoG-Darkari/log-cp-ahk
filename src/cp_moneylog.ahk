@@ -37,22 +37,22 @@ ParseMoneyLog(html, limit := 50)
         ; Geld-Typ (2. Spalte)
         geldTyp := Trim(RegExReplace(rawCols[2], "<[^>]+>"))
 
-        ; ‚ùå Ausschlie√üen
+        ; ? Ausschlieﬂen
         if (geldTyp = "Geld - Prepaid-Handykarte")
             continue
 
-        ; ‚úî Nur diese beiden erlauben
+        ; ? Nur diese beiden erlauben
         if !(geldTyp = "Geld - Hand" || geldTyp = "Geld - Bankkonto")
             continue
 
         ; Typ (3. Spalte)
         typ := Trim(RegExReplace(rawCols[3], "<[^>]+>"))
 
-        ; ‚úî Nur Vergeben oder Wegnehmen
+        ; ? Nur Vergeben oder Wegnehmen
         if !(typ = "Vergeben" || typ = "Wegnehmen")
             continue
 
-        ; ‚úî Limit erreicht?
+        ; ? Limit erreicht?
         if (++count > limit)
             break
 
@@ -60,12 +60,13 @@ ParseMoneyLog(html, limit := 50)
         diff  := Trim(RegExReplace(RegExReplace(rawCols[6], "<[^>]+>"), "\s+", " "))
         bete  := Trim(RegExReplace(RegExReplace(rawCols[8], "<[^>]+>"), "\s+", " "))
         grund := Trim(RegExReplace(RegExReplace(rawCols[9], "<[^>]+>"), "\s+", " "))
+        grund := ReplaceMapped(grund)
 
         obj := {}
-        obj.Datum := datum
+        obj.Datum := FormatDate(FormatDate(datum))
         obj.Differenz := diff
         obj.Beteiligter := bete
-        obj.Grund := grund
+        obj.Grund := ReplaceMapped(grund)
 
         list.Push(obj)
     }
@@ -112,7 +113,7 @@ ParseCashflow(html, limit := 50)
         ; Grund (9. Spalte)
         grund := Trim(RegExReplace(RegExReplace(rawCols[9], "<[^>]+>"), "\s+", " "))
 
-        ; ‚ùå Nur Cashflow (+) erhalten
+        ; ? Nur Cashflow (+) erhalten
         if (grund != "PayDay: Cashflow (+) erhalten")
             continue
 
@@ -130,10 +131,10 @@ ParseCashflow(html, limit := 50)
         bete := Trim(RegExReplace(RegExReplace(rawCols[8], "<[^>]+>"), "\s+", " "))
 
         obj := {}
-        obj.Datum := datum
+        obj.Datum := FormatDate(FormatDate(datum))
         obj.Differenz := diff
         obj.Beteiligter := bete
-        obj.Grund := grund
+        obj.Grund := ReplaceMapped(grund)
 
         list.Push(obj)
     }
@@ -144,7 +145,7 @@ ParseCashflow(html, limit := 50)
 
 BuildMoneyLogDialog(html)
 {
-    rows := ParseMoneyLog(html,50)
+    rows := ParseMoneyLog(html,80)
 
     dialog := "Datum`tDifferenz`tBeteiligter`tGrund`n"
 
@@ -152,16 +153,18 @@ BuildMoneyLogDialog(html)
     {
         If (InStr(obj.Differenz, "-"))
         {
+                obj.Differenz := StrReplace(obj.Differenz, "- $")
                 color := "{C41E3A}"
         }
-                If (InStr(obj.Differenz, "+"))
+                If (InStr(obj.Differenz, "+ "))
         {
+                obj.Differenz := StrReplace(obj.Differenz, "+ $")
                 color := "{32CD32}"
         }
-        dialog .= obj.Datum "`t"
-                . color obj.Differenz "`t{FFFFFF}"
-                . obj.Beteiligter "`t"
-                . obj.Grund "`n"
+        dialog .= Trim(obj.Datum) "`t"
+                . color Trim(obj.Differenz) "`t{FFFFFF}"
+                . Trim(obj.Beteiligter) "`t"
+                . Trim(obj.Grund) "`n"
     }
 
     return dialog
@@ -171,25 +174,210 @@ BuildMoneyLogDialog(html)
 
 BuildPaydayLogDialog(html)
 {
-    rows := ParseCashflow(html,50)
+    rows := ParseCashflow(html,100)
 
-    dialog := "Datum`tDifferenz`tBeteiligter`tGrund`n"
+    dialog := "Datum`tCashflow`t`n"
 
     for index, obj in rows
     {
-        If (InStr(obj.Differenz, "-"))
-        {
+         {
+                obj.Differenz := StrReplace(obj.Differenz, "- $")
                 color := "{C41E3A}"
         }
-                If (InStr(obj.Differenz, "+"))
+                If (InStr(obj.Differenz, ""))
         {
+                obj.Differenz := StrReplace(obj.Differenz, "+ $")
                 color := "{32CD32}"
         }
-        dialog .= obj.Datum "`t"
-                . color obj.Differenz "`t{FFFFFF}"
-                . obj.Beteiligter "`t"
-                . obj.Grund "`n"
+        dialog .= Trim(obj.Datum) "`t"
+                . color Trim(obj.Differenz) "`t`n{FFFFFF}"
     }
 
     return dialog
 }
+
+FormatDate(str) {
+    ; Erwartet Format: DD.MM.YYYY HH:MM:SS
+
+    ; Jahr k¸rzen: 2026 ? 26
+    str := RegExReplace(str, "(\d{2}\.\d{2}\.)20(\d{2})", "$1$2")
+
+    ; Sekunden entfernen: HH:MM:SS ? HH:MM
+    str := RegExReplace(str, "(\d{2}:\d{2}):\d{2}", "$1")
+
+    return str
+}
+
+/*
+ReplaceMapped(str) {
+    static rules := []
+
+    ; -------------------------
+    ; EXAKTE MATCHES
+    ; -------------------------
+    rules.Push({ type: "exact", find: "24/7-Shop", replace: "24/7" })
+    rules.Push({ type: "exact", find: "Angeln: Geldbeutel im Meer gefunden", replace: "Fund" })
+    rules.Push({ type: "exact", find: "Appartement erworben", replace: "Appartment" })
+    rules.Push({ type: "exact", find: "Bar", replace: "Bar" })
+    rules.Push({ type: "exact", find: "Bus-Ticket bezahlt", replace: "Bus" })
+    rules.Push({ type: "exact", find: "Car-Terminal", replace: "CT" })
+    rules.Push({ type: "exact", find: "Casino", replace: "Casino" })
+    rules.Push({ type: "exact", find: "Drogen verkauft", replace: "Drogen" })
+    rules.Push({ type: "exact", find: "Entzug-Angebot von Sanit‰ter akzeptiert", replace: "Rehab" })
+    rules.Push({ type: "exact", find: "Erk‰ltungstabletten-Packung(en) erworben", replace: "Apotheke" })
+    rules.Push({ type: "exact", find: "Erzmine Arbeiter verpr¸gelt", replace: "Fund" })
+    rules.Push({ type: "exact", find: "Eventspende", replace: "Event" })
+    rules.Push({ type: "exact", find: "Fahrzeug abgemeldet", replace: "PF" })
+    rules.Push({ type: "exact", find: "Feste Radarfalle", replace: "Blitzer" })
+    rules.Push({ type: "exact", find: "Fitness-Studio", replace: "Fitness" })
+    rules.Push({ type: "exact", find: "Gang/Mafia", replace: "Gangwar" })
+    rules.Push({ type: "exact", find: "Geld vernichtet", replace: "/vernichten" })
+    rules.Push({ type: "exact", find: "Geld via /pay transferiert", replace: "/pay" })
+    rules.Push({ type: "exact", find: "Geld via ‹berweisung an Spieler transferiert", replace: "‹berweisung" })
+    rules.Push({ type: "exact", find: "Geldautomat", replace: "ATM" })
+    rules.Push({ type: "exact", find: "Gruppe umbenannt", replace: "Gruppe" })
+    rules.Push({ type: "exact", find: "Gunshop", replace: "Gunshop" })
+    rules.Push({ type: "exact", find: "Haus gekauft", replace: "Haus" })
+    rules.Push({ type: "exact", find: "Heal-Automat", replace: "Heal" })
+    rules.Push({ type: "exact", find: "Heroin als Schmuggler hergesellt", replace: "Schmuggler" })
+    rules.Push({ type: "exact", find: "Joint als Schmuggler hergesellt", replace: "Schmuggler" })
+    rules.Push({ type: "exact", find: "Kill f¸r Hitman in Auftrag gegeben", replace: "Kopfgeld" })
+    rules.Push({ type: "exact", find: "Korrektur aufgrund von accountabh‰ngiger Geldgrenze", replace: "Korrektur" })
+    rules.Push({ type: "exact", find: "LS-Mall-Rentcar", replace: "Rentcar" })
+    rules.Push({ type: "exact", find: "Methamphetamin als Schmuggler hergesellt", replace: "Schmuggler" })
+    rules.Push({ type: "exact", find: "Methamphetamin von Schmuggler gekauft", replace: "Schmuggler" })
+    rules.Push({ type: "exact", find: "M¸lldienst: Geldbeutel im M¸ll gefunden", replace: "Fund" })
+    rules.Push({ type: "exact", find: "News Reporter Spieler fotografiert", replace: "NR: Foto" })
+    rules.Push({ type: "exact", find: "Ostereiersuche 2026", replace: "Event" })
+    rules.Push({ type: "exact", find: "Paintball", replace: "Paintball" })
+    rules.Push({ type: "exact", find: "PayDay", replace: "PayDay" })
+    rules.Push({ type: "exact", find: "Permanente Gruppe gegr¸ndet", replace: "Gruppe" })
+    rules.Push({ type: "exact", find: "Restaurant:", replace: "Heal" })
+    rules.Push({ type: "exact", find: "Sanit‰ter: Spieler wiederbelebt", replace: "/revive" })
+    rules.Push({ type: "exact", find: "Schieﬂstand betreten", replace: "Gunrange" })
+    rules.Push({ type: "exact", find: "Spieler als Sanit‰ter geheilt.", replace: "/mh" })
+    rules.Push({ type: "exact", find: "Tankstelle:", replace: "Tanken" })
+    rules.Push({ type: "exact", find: "Taxi-Bonus", replace: "Taxi" })
+    rules.Push({ type: "exact", find: "Taxi-Kosten bezahlt", replace: "Taxi" })
+    rules.Push({ type: "exact", find: "Ticket bezahlt", replace: "Ticket" })
+    rules.Push({ type: "exact", find: "Vehikel gekauft", replace: "‹berweisung" })
+    rules.Push({ type: "exact", find: "Vehikel von Mitspieler gekauft", replace: "PF" })
+    rules.Push({ type: "exact", find: "Von Admin editiert", replace: "Admin" })
+    rules.Push({ type: "exact", find: "Von Sanit‰ter heilen lassen.", replace: "/mh" })
+    rules.Push({ type: "exact", find: "Weihnachten-Special:", replace: "Event" })
+    rules.Push({ type: "exact", find: "Weihnachtstruck geliehen", replace: "Event" })
+    rules.Push({ type: "exact", find: "Werbeanzeige geschaltet", replace: "Werbung" })
+    rules.Push({ type: "exact", find: "Werkstatt:", replace: "Werkstatt" })
+    rules.Push({ type: "exact", find: "West-LS-Rentcar:", replace: "Rentcar" })
+
+    ; -------------------------
+    ; REGEX MATCHES
+    ; -------------------------
+    rules.Push({ type: "regex", find: "Level\s+\d+\s+gekauft", replace: "LVL-UP" })
+    rules.Push({ type: "regex", find: "Geld auf Fraktionskasse eingezahlt.*", replace: "F-Kasse" })
+    rules.Push({ type: "regex", find: "Online-‹berweisung.*", replace: "‹berweisung" })
+
+    ; -------------------------
+    ; ENGINE
+    ; -------------------------
+    for i, rule in rules {
+        if (rule.type = "exact") {
+            StringReplace, str, str, % rule.find, % rule.replace, All
+        } else if (rule.type = "regex") {
+            str := RegExReplace(str, rule.find, rule.replace)
+        }
+    }
+
+    return str
+}
+    */
+
+    ReplaceMapped(str) {
+    static rules := []
+
+    if (rules.Length() = 0) {
+
+        ; -------------------------
+        ; EXAKTE MATCHES
+        ; -------------------------
+        rules.Push({type:"contains", find:"24/7-Shop:", replace:"24/7"})
+        rules.Push({type:"contains", find:"Angeln: Geldbeutel im Meer gefunden", replace:"Fund"})
+        rules.Push({type:"contains", find:"Appartement erworben", replace:"Appartment"})
+        rules.Push({type:"contains", find:"Bar: Soda gekauft", replace:"Bar"})
+        rules.Push({type:"contains", find:"Bar: Whiskey gekauft", replace:"Bar"})
+        rules.Push({type:"contains", find:"Bus-Ticket bezahlt", replace:"Bus"})
+        rules.Push({type:"contains", find:"Car-Terminal", replace:"CT"})
+        rules.Push({type:"contains", find:"Casino:", replace:"Casino"})
+        rules.Push({type:"contains", find:"Drogen verkauft", replace:"Drogen"})
+        rules.Push({type:"contains", find:"Entzug-Angebot von Sanit‰ter akzeptiert", replace:"Rehab"})
+        rules.Push({type:"contains", find:"Erk‰ltungstabletten-Packung(en) erworben", replace:"Apotheke"})
+        rules.Push({type:"contains", find:"Erzmine: Arbeiter verpr¸gelt", replace:"Fund"})
+        rules.Push({type:"contains", find:"Eventspende", replace:"Event"})
+        rules.Push({type:"contains", find:"Fahrzeug abgemeldet", replace:"PF"})
+        rules.Push({type:"contains", find:"Feste Radarfalle", replace:"Blitzer"})
+        rules.Push({type:"contains", find:"Fitness-Studio", replace:"Fitness"})
+        rules.Push({type:"contains", find:"Gang/Mafia", replace:"Gangwar"})
+        rules.Push({type:"contains", find:"Geld vernichtet", replace:"/vernichten"})
+        rules.Push({type:"contains", find:"Geld via /pay transferiert", replace:"/pay"})
+        rules.Push({type:"contains", find:"Geld via ‹berweisung an Spieler transferiert", replace:"‹berweisung"})
+        rules.Push({type:"contains", find:"Geldautomat", replace:"ATM"})
+        rules.Push({type:"contains", find:"Gruppe umbenannt", replace:"Gruppe"})
+        rules.Push({type:"contains", find:"Gunshop", replace:"Gunshop"})
+        rules.Push({type:"contains", find:"Haus gekauft", replace:"Haus"})
+        rules.Push({type:"contains", find:"Heal-Automat", replace:"Heal"})
+        rules.Push({type:"contains", find:"Heroin als Schmuggler", replace:"Schmuggler"})
+        rules.Push({type:"contains", find:"Joint als Schmuggler", replace:"Schmuggler"})
+        rules.Push({type:"contains", find:"Kill f¸r Hitman", replace:"Kopfgeld"})
+        rules.Push({type:"contains", find:"Korrektur aufgrund", replace:"Korrektur"})
+        rules.Push({type:"contains", find:"Rentcar", replace:"Rentcar"})
+        rules.Push({type:"contains", find:"M¸lldienst", replace:"Fund"})
+        rules.Push({type:"contains", find:"News Reporter", replace:"NR: Foto"})
+        rules.Push({type:"contains", find:"Ostereiersuche", replace:"Event"})
+        rules.Push({type:"contains", find:"Paintball", replace:"Paintball"})
+        rules.Push({type:"contains", find:"PayDay", replace:"PayDay"})
+        rules.Push({type:"contains", find:"Permanente Gruppe gegr¸ndet", replace:"Gruppe"})
+        rules.Push({type:"contains", find:"Restaurant", replace:"Heal"})
+        rules.Push({type:"contains", find:"Sanit‰ter: Kunde hat Entzug-Angebot akzeptiert", replace:"Rehab"})
+        rules.Push({type:"contains", find:"Sanit‰ter: Spieler wiederbelebt", replace:"/revive"})
+        rules.Push({type:"contains", find:"Schieﬂstand betreten", replace:"Gunrange"})
+        rules.Push({type:"contains", find:"Spieler als Sanit‰ter geheilt", replace:"/mh"})
+        rules.Push({type:"contains", find:"Tankstelle", replace:"Tanken"})
+        rules.Push({type:"contains", find:"Taxi-Bonus", replace:"Taxi"})
+        rules.Push({type:"contains", find:"Taxi-Kosten bezahlt", replace:"Taxi"})
+        rules.Push({type:"contains", find:"Ticket bezahlt", replace:"Ticket"})
+        rules.Push({type:"contains", find:"Vehikel gekauft", replace:"‹berweisung"})
+        rules.Push({type:"contains", find:"Vehikel von Mitspieler gekauft", replace:"PF"})
+        rules.Push({type:"contains", find:"Von Admin editiert", replace:"Admin"})
+        rules.Push({type:"contains", find:"Von Sanit‰ter heilen lassen", replace:"/mh"})
+        rules.Push({type:"contains", find:"Weihnachten-Special", replace:"Event"})
+        rules.Push({type:"contains", find:"Weihnachtstruck", replace:"Event"})
+        rules.Push({type:"contains", find:"Werbeanzeige geschaltet", replace:"Werbung"})
+        rules.Push({type:"contains", find:"Werkstatt", replace:"Werkstatt"})
+
+        ; -------------------------
+        ; REGEX MATCHES (ganzer String)
+        ; -------------------------
+        rules.Push({type:"regex", find:"^Level\s+\d+\s+gekauft$", replace:"LVL-UP"})
+        rules.Push({type:"regex", find:"^Geld auf Fraktionskasse eingezahlt.*$", replace:"F-Kasse"})
+        rules.Push({type:"regex", find:"^Online-‹berweisung.*$", replace:"‹berweisung"})
+    }
+
+    ; -------------------------
+    ; ENGINE
+    ; -------------------------
+
+    ; 1) RegEx-Regeln zuerst (ganzer String)
+    for i, rule in rules {
+        if (rule.type = "regex" && RegExMatch(str, rule.find))
+            return rule.replace
+    }
+
+    ; 2) Contains-Regeln (wenn Teilstring vorkommt ? GANZER String ersetzen)
+    for i, rule in rules {
+        if (rule.type = "contains" && InStr(str, rule.find))
+            return rule.replace
+    }
+
+    return str
+}
+

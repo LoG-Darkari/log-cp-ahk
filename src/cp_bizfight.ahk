@@ -33,7 +33,7 @@ ParseBusinessInfo(html)
         besitzer   := cols[2]
         schutzgeld := cols[3]
 
-        schutzgeld  := StrReplace(schutzgeld, "Niemand" , "{6495ED}Los Santos Police Department")
+        schutzgeld  := StrReplace(schutzgeld, "Niemand" , "{6495ED}Niemand")
         schutzgeld  := StrReplace(schutzgeld, "Grove Street Families" , "{006600}Grove Street Families")
         schutzgeld  := StrReplace(schutzgeld, "Front Yard Ballas" , "{660066}Front Yard Ballas")
         schutzgeld  := StrReplace(schutzgeld, "Triaden Mafia" , "{FFFF80}Triaden Mafia")

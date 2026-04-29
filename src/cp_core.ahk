@@ -1,5 +1,5 @@
-ï»¿; ============================================================
-;   CONTROL PANEL SDK â€“ CORE MODULE
+; ============================================================
+;   CONTROL PANEL SDK – CORE MODULE
 ; ============================================================
 
 global CP := { LoggedIn: false, Session: "" }
@@ -22,6 +22,7 @@ cp_Login() {
     If (CP_PW == "")
     {
     CP_PW := PlayerInput("CP-Passwort: ")
+    
     CP_PW := cp_UrlEncode(CP_PW)
     }
    
@@ -60,9 +61,9 @@ http_Request(method, endpoint, payload := "") {
 
     CP.Session.WaitForResponse()
     var := CP.Session.ResponseText()
-    if (InStr(var, "Du besitzt nicht die nÃ¶tigen Rechte um diese Seite aufrufen zu kÃ¶nnen!"))
+    if (InStr(var, "Du besitzt nicht die nötigen Rechte um diese Seite aufrufen zu können!"))
     {
-        AddChatMessage("{006EE6} CP {FFFFFF} Diese Seite ist fÃ¼r dich leider nicht VerfÃ¼gbar")
+        AddChatMessage("{006EE6} CP {FFFFFF} Diese Seite ist für dich leider nicht Verfügbar")
         Return
     }
 

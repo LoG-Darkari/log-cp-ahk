@@ -25,7 +25,7 @@ GetActivePremium(html)
         produkt := cols[2]
         ablauf  := cols[5]
 
-        ; Nur den aktiven Eintrag zurÃ¼ckgeben
+        ; Nur den aktiven Eintrag zurückgeben
         if (status = "Aktiv")
             return status " | " produkt " | " ablauf
     }
@@ -107,3 +107,20 @@ cp_getPremium()
     return response
 }
 
+
+cp_buy_premium(account, premium, laufzeit)
+{ 
+cp_Login()
+message := "Huhu,`n`nhiermit möche ich einen " premium " für " account " erwerben.`nDie Laufzeit soll " laufzeit " betragen.`n`n Viele Grüße`n`n" GetPlayerName()
+;message := cp_UrlEncode(message)
+message := RegExReplace(message, "Ui)\{[a-f0-9]{6}\}")
+RequestType 	:= "POST"
+URL 			:= "https://samp.cp.life-of-german.org/ticket/new"
+Payload         := "issueID=3&priority=2&subject=Premiumkauf&message=" message "&abschicken=abschicken"
+;http_Request("GET", URL)
+response := http_Request(RequestType,URL,Payload)
+FileDelete, cpbpa.log
+FileAppend, %response%, cpbpa.log
+cp_Logout()
+Return response
+}
