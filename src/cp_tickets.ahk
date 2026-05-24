@@ -3,8 +3,6 @@ cp_getTickets()
     cp_Login()
     response := http_Request("GET","https://samp.cp.life-of-german.org/ticket/tickets","")
     cp_Logout()
-    FileDelete, ticket.log
-    FileAppend, %response%, ticket.log
     return response
 }
 

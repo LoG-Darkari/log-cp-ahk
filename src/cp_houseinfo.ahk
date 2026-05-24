@@ -20,7 +20,6 @@ og_ParseHouseInformation(html)
             val := RegExReplace(valRaw, "<[^>]+>")
             val := Trim(RegExReplace(val, "\s+", " "))
 
-            ; Spezialfälle: Icons → true/false
             if InStr(valRaw, "valid.png")
                 val := "Ja"
             else if InStr(valRaw, "invalid.png")
@@ -44,7 +43,6 @@ ParseHouseInformation(html)
     house := {}
 
     pos := 1
-    ; DOTALL: "s)" damit .* auch über Zeilen geht
     while pos := RegExMatch(html, "s)<tr[^>]*>(.*?)</tr>", m, pos)
     {
         pos += StrLen(m)

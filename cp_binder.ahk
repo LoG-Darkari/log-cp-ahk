@@ -43,11 +43,15 @@ if(!s)
 Suspend Off
 return var
 }
+global Skins := {}
+
+
+
 
 :?:/cpu::
-AddChatMessage("{006EE6} CP {FFFFFF} ùerweisung vom eigenen Konto an Spieler")
+AddChatMessage("{006EE6} CP {FFFFFF} ‹berweisung vom eigenen Konto an Spieler")
 Sleep, 250
-recipient := PlayerInput("Empfùnger: ")
+recipient := PlayerInput("Empf‰nger: ")
 amount := PlayerInput("Betrag: ")
 additional := PlayerInput("Grund: ")
 cpu(recipient, amount, additional)
@@ -55,9 +59,9 @@ Return
 
 
 :?:/scpu::
-AddChatMessage("{006EE6} CP {FFFFFF} ùerweisung vom eigenen Konto an Spieler (ohne Grund)")
+AddChatMessage("{006EE6} CP {FFFFFF} ‹berweisung vom eigenen Konto an Spieler (ohne Grund)")
 Sleep, 250
-recipient := PlayerInput("Empfùnger: ")
+recipient := PlayerInput("Empf‰nger: ")
 amount := PlayerInput("Betrag: ")
 cpu(recipient, amount, "")
 Return
@@ -66,7 +70,7 @@ Return
 Sleep, 200
 txt := cp_getPremium()
 diatxt := BuildPremiumDialog(txt)
-ShowDialog(5,"Permiumùbersicht", diatxt, "Schlieùen")
+ShowDialog(5,"Permium¸bersicht", diatxt, "Schlieﬂen")
 Return
 
 :?:/pl::
@@ -92,12 +96,12 @@ color := "{868279}"
 }
 If (InStr(prm[3], "unbegrenzt"))
 {
-AddChatMessage("{006EE6} [CP]: {FFFFFF}Dein "color ""prm[2] "{FFFFFF} lùuft nicht ab.")
+AddChatMessage("{006EE6} [CP]: {FFFFFF}Dein "color ""prm[2] "{FFFFFF} l‰uft nicht ab.")
 Return
 
 }
 Else
-AddChatMessage("{006EE6} [CP]: {FFFFFF}Dein "color ""prm[2] "{FFFFFF} lùuft am " ablauf[1] " um "ablauf[2]" Uhr ab.")
+AddChatMessage("{006EE6} [CP]: {FFFFFF}Dein "color ""prm[2] "{FFFFFF} l‰uft am " ablauf[1] " um "ablauf[2]" Uhr ab.")
 Return
 
 :?:/ct::
@@ -109,49 +113,49 @@ Return
 Sleep, 200
 txt := cp_getWeaponstore()
 diatxt := BuildWeaponstoreDialog(txt)
-ShowDialog(5,"Waffenlager Bestand", diatxt, "Schlieùen")
+ShowDialog(5,"Waffenlager Bestand", diatxt, "Schlieﬂen")
 Return
 
 :?:/faps::
 Sleep, 200
 diatxt := cp_getFaps()
 diatxt := BuildActivityDialog(diatxt)
-ShowDialog(5,"Fraktionsaktivitùtspunkte", diatxt, "Schlieùen")
+ShowDialog(5,"Fraktionsaktivit‰tspunkte", diatxt, "Schlieﬂen")
 Return
 
 :?:/bfl::
 Sleep, 200
 diatxt := cp_getBizlist()
 diatxt := BuildBusinessDialog(diatxt)
-ShowDialog(5,"Busineesinfo", diatxt, "Schlieùen")
+ShowDialog(5,"Busineesinfo", diatxt, "Schlieﬂen")
 Return
 
 :?:/fml::
 Sleep, 200
 diatxt := cp_getFMembers()
 diatxt := BuildFactionMemberDialog(diatxt)
-ShowDialog(5,"Fraktionsmitglieder", diatxt, "Schlieùen")
+ShowDialog(5,"Fraktionsmitglieder", diatxt, "Schlieﬂen")
 Return
 
 :?:/fvl::
 Sleep, 200
 diatxt := cp_getFVehicles()
 diatxt := BuildFactionVehicleDialog(diatxt)
-ShowDialog(5,"Fraktionsfahrzeuge", diatxt, "Schlieùen")
+ShowDialog(5,"Fraktionsfahrzeuge", diatxt, "Schlieﬂen")
 Return
 
 :?:/hinfo::
 Sleep, 200
 diatxt := cp_getHouse()
 diatxt := BuildHouseDialog(diatxt)
-ShowDialog(5,"Hausinformationen", diatxt, "Schlieùen")
+ShowDialog(5,"Hausinformationen", diatxt, "Schlieﬂen")
 Return
 
 :?:/finfo::
 Sleep, 200
 diatxt := cp_getFInfo()
 diatxt := BuildFactionInfoDialog(diatxt)
-ShowDialog(5,"Fraktionsinformationen", diatxt, "Schlieùen")
+ShowDialog(5,"Fraktionsinformationen", diatxt, "Schlieﬂen")
 Return
 
 :?:/fkinfo::
@@ -188,25 +192,25 @@ Return frak
 :?:/teamol::
 Sleep, 200
 diatxt := BuildTeamOL()
-ShowDialog(5,"Team-Online-Liste", diatxt, "Schlieùen")
+ShowDialog(5,"Team-Online-Liste", diatxt, "Schlieﬂen")
 Return
 
 :?:/tl::
 Sleep, 200
 diatxt := BuildTeamDialog()
-ShowDialog(5,"Teamliste", diatxt, "Schlieùen")
+ShowDialog(5,"Teamliste", diatxt, "Schlieﬂen")
 Return
 
 :?:/leaderol::
 Sleep, 200
 diatxt := BuildLeaderOL()
-ShowDialog(5,"Leader-Online-Liste", diatxt, "Schlieùen")
+ShowDialog(5,"Leader-Online-Liste", diatxt, "Schlieﬂen")
 Return
 
 :?:/leader::
 Sleep, 200
 diatxt := BuildLeaderDialog()
-ShowDialog(5,"Leaderliste", diatxt, "Schlieùen")
+ShowDialog(5,"Leaderliste", diatxt, "Schlieﬂen")
 Return
 
 
@@ -233,16 +237,18 @@ color := "{868279}"
 }
 If (InStr(prm[3], "unbegrenzt"))
 {
-AddChatMessage("{006EE6} [CP]: {FFFFFF}Dein "color ""prm[2] "{FFFFFF} lùuft nicht ab.")
+AddChatMessage("{006EE6} [CP]: {FFFFFF}Dein "color ""prm[2] "{FFFFFF} l‰uft nicht ab.")
 Return
 
 }
 
 Else
 {
-    AddChatMessage("{006EE6} [CP]: {FFFFFF}Dein "color ""prm[2] "{FFFFFF} lùuft am " ablauf[1] " um "ablauf[2]" Uhr ab.")
+    AddChatMessage("{006EE6} [CP]: {FFFFFF}Dein "color ""prm[2] "{FFFFFF} l‰uft am " ablauf[1] " um "ablauf[2]" Uhr ab.")
 Return
 }
+
+/*
 
 
 :?:/mlog::
@@ -269,6 +275,28 @@ ShowDialog(5,"Geld-LoG", diatxt, "Schlieùen")
 UnBlockChatInput()
 BlockInput, Off
 Return
+*/
+:?:/mplog::
+timefrom := A_Now
+Sleep, 200
+
+if (CP_PW = "") {
+    CP_PW := PlayerInput("CP-Passwort: ")
+    CP_PW := cp_UrlEncode(CP_PW)
+}
+
+
+BlockChatInput()
+
+html := cp_money_log()
+pages := BuildMoneyLogDialog_Pages(html)
+
+ShowMoneyLogPaged("Geld-LoG", pages)
+
+UnBlockChatInput()
+
+return
+
 
 :?:/cc::
 Loop, 100
@@ -289,11 +317,11 @@ diatxt := BuildPaydayLogDialog(txt)
 ;AddChatMessage(StrLen(diatxt))
 If (StrLen(diatxt) > 4096)
 {
-    AddChatMessage("{B22222} FEHLER: {FFFFFF} Der Geldlog ist zu groù zum Anzeigen")
+    AddChatMessage("{B22222} FEHLER: {FFFFFF} Der Geldlog ist zu groﬂ zum Anzeigen")
 }
 Else
 {
-ShowDialog(5,"Paydays", diatxt, "Schlieùen")
+ShowDialog(5,"Paydays", diatxt, "Schlieﬂen")
 }
 UnBlockChatInput()
 BlockInput, Off
@@ -313,11 +341,11 @@ diatxt := BuildTicketDialog(txt)
 ;AddChatMessage(StrLen(diatxt))
 If (StrLen(diatxt) > 4096)
 {
-    AddChatMessage("{B22222} FEHLER: {FFFFFF} Der Geldlog ist zu groù zum Anzeigen")
+    AddChatMessage("{B22222} FEHLER: {FFFFFF} Der Geldlog ist zu groﬂ zum Anzeigen")
 }
 Else
 {
-ShowDialog(5,"Ticketùbersicht", diatxt, "Schlieùen")
+ShowDialog(5,"Ticket¸bersicht", diatxt, "Schlieﬂen")
 }
 UnBlockChatInput()
 BlockInput, Off
@@ -325,8 +353,10 @@ Return
 
 
 F3::
-AddChatMessage(StrLen(GetDialogText()))
-Return
+    pages := BuildTestPages()
+    ShowTestPaged("TEST-PAGING", pages)
+return
+
 
 :?:/buypa::
 Sleep, 200
@@ -500,28 +530,56 @@ BuildPremiumBuyDialog()
 }
 
 
-F2::
-ih := InputHook("V")
-ShowDialog(3,"Passwort", "Bitte Passwort eingeben:", "Login", "Abbrechen")
-ih.start()
-    Loop
-    {   
-        if IsDialogButton1Selected() OR GetKeyState("Enter")
-        { 
-        Sleep, 200
-        if !IsDialogOpen()
-        {
-            ih.stop()
-            AddChatMessage(ih.input)
-            AddChatMessage(GetDialogLineCount())
-            AddChatMessage(pw)
-            Break
-        }
-        }
-        if !IsDialogOpen() OR GetKeyState("Esc") 
-            {
-                AddChatMessage("Abbruch")
-            Return
-            }
 
+
+
+:?:/civskin::
+html := cp_getSkins()
+cats := GetSkinCategories(html)
+
+txt := BuildSkinListDialog("Zivilisten-Skins", cats.civ)
+ShowDialog(5, "Zivilisten-Skins", txt, "OK")
+return
+
+:?:/facskin::
+html := cp_getSkins()
+cats := GetSkinCategories(html)
+
+txt := BuildSkinListDialog("Fraktions-Skins", cats.fac)
+ShowDialog(5, "Fraktions-Skins", txt, "OK")
+return
+
+
+:?:/skinlist::
+init_skins()
+AddChatMessage("Skins geladen: " Skins.MaxIndex())
+html := cp_getSkins()
+cats := GetSkinCategories(html)
+AddChatMessage(cats.all.MaxIndex())
+txt := BuildSkinListDialog("Alle Skins", cats.fac)
+ShowDialog(5, "Alle Skins", txt, "OK")
+return
+
+
+:?:/accinfo::
+AddChatMessage(CP_Faction)
+AddChatMessage(CP_Rank)
+Return
+
+:?:/wl::
+html := cp_getWarGebiete()
+If (!InStr(html, "warinfo"))
+{
+    AddChatMessage("Diese Funktion steht dir leider nicht zur Verf¸gung!")
+    Return
 }
+txt := BuildWarDialog(html)
+ShowDialog(5, "War-Gebiete", txt, "OK")
+return
+
+:?:/gwl::
+html := cp_getGangWarGebiete()
+txt := BuildGangwarDialog(html)
+ShowDialog(5, "Gangwar-Gebiete", txt, "OK")
+return
+

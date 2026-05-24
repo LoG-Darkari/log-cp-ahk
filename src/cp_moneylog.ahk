@@ -4,10 +4,7 @@ cp_Login()
 RequestType 	:= "POST"
 URL 			:= "https://samp.cp.life-of-german.org/home/moneylog"
 Payload         := "logTypeID=" logtype "&moneyTypeID=" moneytype "&timeFrom=" timefrom "&timeTo=" timeto "&anzeigen=anzeigen"
-;http_Request("GET", URL)
 response := http_Request(RequestType,URL,Payload)
-FileDelete, ml.log
-FileAppend, %response%, ml.log
 cp_Logout()
 Return response
 }
@@ -60,13 +57,13 @@ ParseMoneyLog(html, limit := 50)
         diff  := Trim(RegExReplace(RegExReplace(rawCols[6], "<[^>]+>"), "\s+", " "))
         bete  := Trim(RegExReplace(RegExReplace(rawCols[8], "<[^>]+>"), "\s+", " "))
         grund := Trim(RegExReplace(RegExReplace(rawCols[9], "<[^>]+>"), "\s+", " "))
-        grund := ReplaceMapped(grund)
+        grund := grund
 
         obj := {}
         obj.Datum := FormatDate(FormatDate(datum))
         obj.Differenz := diff
         obj.Beteiligter := bete
-        obj.Grund := ReplaceMapped(grund)
+        obj.Grund := grund
 
         list.Push(obj)
     }
@@ -134,7 +131,7 @@ ParseCashflow(html, limit := 50)
         obj.Datum := FormatDate(FormatDate(datum))
         obj.Differenz := diff
         obj.Beteiligter := bete
-        obj.Grund := ReplaceMapped(grund)
+        obj.Grund := grund
 
         list.Push(obj)
     }
@@ -143,32 +140,64 @@ ParseCashflow(html, limit := 50)
 }
 
 
-BuildMoneyLogDialog(html)
-{
-    rows := ParseMoneyLog(html,80)
+BuildMoneyLogDialog_Pages(html) {
+    rows := ParseMoneyLog(html, 8000)
 
-    dialog := "Datum`tDifferenz`tBeteiligter`tGrund`n"
+    header := "Datum`tDifferenz`tBeteiligter`tGrund`n"
+    maxLen := 3800
+    pages := []
+    current := header
 
     for index, obj in rows
     {
-        If (InStr(obj.Differenz, "-"))
-        {
-                obj.Differenz := StrReplace(obj.Differenz, "- $")
-                color := "{C41E3A}"
+        ; Farbe bestimmen
+        if InStr(obj.Differenz, "-") {
+            diff := StrReplace(obj.Differenz, "- $")
+            color := "{C41E3A}"
+        } else if InStr(obj.Differenz, "+ ") {
+            diff := StrReplace(obj.Differenz, "+ $")
+            color := "{32CD32}"
+        } else {
+            diff := obj.Differenz
+            color := "{FFFFFF}"
         }
-                If (InStr(obj.Differenz, "+ "))
-        {
-                obj.Differenz := StrReplace(obj.Differenz, "+ $")
-                color := "{32CD32}"
+
+        line := Trim(obj.Datum) "`t"
+             . color Trim(diff) "`t{FFFFFF}"
+             . Trim(obj.Beteiligter) "`t"
+             . Trim(obj.Grund) "`n"
+
+        if (StrLen(current . line) > maxLen) {
+            pages.Push(current)
+            current := header . line
+        } else {
+            current .= line
         }
-        dialog .= Trim(obj.Datum) "`t"
-                . color Trim(obj.Differenz) "`t{FFFFFF}"
-                . Trim(obj.Beteiligter) "`t"
-                . Trim(obj.Grund) "`n"
     }
 
-    return dialog
+    pages.Push(current)
+
+    ; Footer hinzufügen
+    finalPages := []
+    Loop % pages.MaxIndex() {
+        i := A_Index
+        hasPrev := (i > 1)
+        hasNext := (i < pages.MaxIndex())
+        finalPages.Push(AddFooter(pages[i], hasPrev, hasNext))
+    }
+
+    return finalPages
 }
+
+
+AddFooter(pageText, hasPrev, hasNext) {
+    f1 := ""              ; Leerzeile
+    f2 := hasNext ? "Weiter" : ""
+    f3 := hasPrev ? "Zurück" : ""
+    return pageText "`n" f1 "`n" f2 "`n" f3
+}
+
+
 
 
 
@@ -181,12 +210,12 @@ BuildPaydayLogDialog(html)
     for index, obj in rows
     {
          {
-                obj.Differenz := StrReplace(obj.Differenz, "- $")
+                obj.Differenz := StrReplace(obj.Differenz, "- ")
                 color := "{C41E3A}"
         }
                 If (InStr(obj.Differenz, ""))
         {
-                obj.Differenz := StrReplace(obj.Differenz, "+ $")
+                obj.Differenz := StrReplace(obj.Differenz, "+ ")
                 color := "{32CD32}"
         }
         dialog .= Trim(obj.Datum) "`t"
@@ -208,89 +237,6 @@ FormatDate(str) {
     return str
 }
 
-/*
-ReplaceMapped(str) {
-    static rules := []
-
-    ; -------------------------
-    ; EXAKTE MATCHES
-    ; -------------------------
-    rules.Push({ type: "exact", find: "24/7-Shop", replace: "24/7" })
-    rules.Push({ type: "exact", find: "Angeln: Geldbeutel im Meer gefunden", replace: "Fund" })
-    rules.Push({ type: "exact", find: "Appartement erworben", replace: "Appartment" })
-    rules.Push({ type: "exact", find: "Bar", replace: "Bar" })
-    rules.Push({ type: "exact", find: "Bus-Ticket bezahlt", replace: "Bus" })
-    rules.Push({ type: "exact", find: "Car-Terminal", replace: "CT" })
-    rules.Push({ type: "exact", find: "Casino", replace: "Casino" })
-    rules.Push({ type: "exact", find: "Drogen verkauft", replace: "Drogen" })
-    rules.Push({ type: "exact", find: "Entzug-Angebot von Sanitäter akzeptiert", replace: "Rehab" })
-    rules.Push({ type: "exact", find: "Erkältungstabletten-Packung(en) erworben", replace: "Apotheke" })
-    rules.Push({ type: "exact", find: "Erzmine Arbeiter verprügelt", replace: "Fund" })
-    rules.Push({ type: "exact", find: "Eventspende", replace: "Event" })
-    rules.Push({ type: "exact", find: "Fahrzeug abgemeldet", replace: "PF" })
-    rules.Push({ type: "exact", find: "Feste Radarfalle", replace: "Blitzer" })
-    rules.Push({ type: "exact", find: "Fitness-Studio", replace: "Fitness" })
-    rules.Push({ type: "exact", find: "Gang/Mafia", replace: "Gangwar" })
-    rules.Push({ type: "exact", find: "Geld vernichtet", replace: "/vernichten" })
-    rules.Push({ type: "exact", find: "Geld via /pay transferiert", replace: "/pay" })
-    rules.Push({ type: "exact", find: "Geld via Überweisung an Spieler transferiert", replace: "Überweisung" })
-    rules.Push({ type: "exact", find: "Geldautomat", replace: "ATM" })
-    rules.Push({ type: "exact", find: "Gruppe umbenannt", replace: "Gruppe" })
-    rules.Push({ type: "exact", find: "Gunshop", replace: "Gunshop" })
-    rules.Push({ type: "exact", find: "Haus gekauft", replace: "Haus" })
-    rules.Push({ type: "exact", find: "Heal-Automat", replace: "Heal" })
-    rules.Push({ type: "exact", find: "Heroin als Schmuggler hergesellt", replace: "Schmuggler" })
-    rules.Push({ type: "exact", find: "Joint als Schmuggler hergesellt", replace: "Schmuggler" })
-    rules.Push({ type: "exact", find: "Kill für Hitman in Auftrag gegeben", replace: "Kopfgeld" })
-    rules.Push({ type: "exact", find: "Korrektur aufgrund von accountabhängiger Geldgrenze", replace: "Korrektur" })
-    rules.Push({ type: "exact", find: "LS-Mall-Rentcar", replace: "Rentcar" })
-    rules.Push({ type: "exact", find: "Methamphetamin als Schmuggler hergesellt", replace: "Schmuggler" })
-    rules.Push({ type: "exact", find: "Methamphetamin von Schmuggler gekauft", replace: "Schmuggler" })
-    rules.Push({ type: "exact", find: "Mülldienst: Geldbeutel im Müll gefunden", replace: "Fund" })
-    rules.Push({ type: "exact", find: "News Reporter Spieler fotografiert", replace: "NR: Foto" })
-    rules.Push({ type: "exact", find: "Ostereiersuche 2026", replace: "Event" })
-    rules.Push({ type: "exact", find: "Paintball", replace: "Paintball" })
-    rules.Push({ type: "exact", find: "PayDay", replace: "PayDay" })
-    rules.Push({ type: "exact", find: "Permanente Gruppe gegründet", replace: "Gruppe" })
-    rules.Push({ type: "exact", find: "Restaurant:", replace: "Heal" })
-    rules.Push({ type: "exact", find: "Sanitäter: Spieler wiederbelebt", replace: "/revive" })
-    rules.Push({ type: "exact", find: "Schießstand betreten", replace: "Gunrange" })
-    rules.Push({ type: "exact", find: "Spieler als Sanitäter geheilt.", replace: "/mh" })
-    rules.Push({ type: "exact", find: "Tankstelle:", replace: "Tanken" })
-    rules.Push({ type: "exact", find: "Taxi-Bonus", replace: "Taxi" })
-    rules.Push({ type: "exact", find: "Taxi-Kosten bezahlt", replace: "Taxi" })
-    rules.Push({ type: "exact", find: "Ticket bezahlt", replace: "Ticket" })
-    rules.Push({ type: "exact", find: "Vehikel gekauft", replace: "Überweisung" })
-    rules.Push({ type: "exact", find: "Vehikel von Mitspieler gekauft", replace: "PF" })
-    rules.Push({ type: "exact", find: "Von Admin editiert", replace: "Admin" })
-    rules.Push({ type: "exact", find: "Von Sanitäter heilen lassen.", replace: "/mh" })
-    rules.Push({ type: "exact", find: "Weihnachten-Special:", replace: "Event" })
-    rules.Push({ type: "exact", find: "Weihnachtstruck geliehen", replace: "Event" })
-    rules.Push({ type: "exact", find: "Werbeanzeige geschaltet", replace: "Werbung" })
-    rules.Push({ type: "exact", find: "Werkstatt:", replace: "Werkstatt" })
-    rules.Push({ type: "exact", find: "West-LS-Rentcar:", replace: "Rentcar" })
-
-    ; -------------------------
-    ; REGEX MATCHES
-    ; -------------------------
-    rules.Push({ type: "regex", find: "Level\s+\d+\s+gekauft", replace: "LVL-UP" })
-    rules.Push({ type: "regex", find: "Geld auf Fraktionskasse eingezahlt.*", replace: "F-Kasse" })
-    rules.Push({ type: "regex", find: "Online-Überweisung.*", replace: "Überweisung" })
-
-    ; -------------------------
-    ; ENGINE
-    ; -------------------------
-    for i, rule in rules {
-        if (rule.type = "exact") {
-            StringReplace, str, str, % rule.find, % rule.replace, All
-        } else if (rule.type = "regex") {
-            str := RegExReplace(str, rule.find, rule.replace)
-        }
-    }
-
-    return str
-}
-    */
 
     ReplaceMapped(str) {
     static rules := []
@@ -325,7 +271,7 @@ ReplaceMapped(str) {
         rules.Push({type:"contains", find:"Gunshop", replace:"Gunshop"})
         rules.Push({type:"contains", find:"Haus gekauft", replace:"Haus"})
         rules.Push({type:"contains", find:"Heal-Automat", replace:"Heal"})
-        rules.Push({type:"contains", find:"Heroin als Schmuggler", replace:"Schmuggler"})
+        rules.Push({type:"contains", find:"Schmuggler", replace:"Schmuggler"})
         rules.Push({type:"contains", find:"Joint als Schmuggler", replace:"Schmuggler"})
         rules.Push({type:"contains", find:"Kill für Hitman", replace:"Kopfgeld"})
         rules.Push({type:"contains", find:"Korrektur aufgrund", replace:"Korrektur"})
@@ -381,3 +327,193 @@ ReplaceMapped(str) {
     return str
 }
 
+/*
+BuildMoneyLogDialog_Paged(html) {
+    full := BuildMoneyLogDialog(html)
+    pages := []
+    max := 4000
+
+    pos := 1
+    while (pos <= StrLen(full)) {
+        pages.Push(SubStr(full, pos, max))
+        pos += max
+    }
+    return pages
+}
+
+
+global CP_PAGES := []
+global CP_PAGE_INDEX := 1
+
+ShowPagedDialog(title, pages) {
+    global CP_PAGES, CP_PAGE_INDEX
+    CP_PAGES := pages
+    CP_PAGE_INDEX := 1
+    ShowCurrentPage(title)
+}
+*/
+
+global MLOG_PAGES := []
+global MLOG_INDEX := 1
+
+ShowMoneyLogPaged(title, pages) {
+    global MLOG_PAGES, MLOG_INDEX
+    MLOG_PAGES := pages
+    MLOG_INDEX := 1
+    ShowMoneyLogPage(title)
+}
+
+ShowMoneyLogPage(title) {
+    global MLOG_PAGES, MLOG_INDEX
+
+    txt := MLOG_PAGES[MLOG_INDEX]
+
+    ShowDialog(5, title " (" MLOG_INDEX "/" MLOG_PAGES.MaxIndex() ")", txt, "Auswählen", "Schließen")
+
+    Loop {
+        if IsDialogButton1Clicked() {
+            ;Sleep, 120
+        
+                sel := Trim(GetDialogLine(GetDialogIndex()))
+
+                if (sel = "Vor" && MLOG_INDEX < MLOG_PAGES.MaxIndex()) {
+                    MLOG_INDEX++
+                    ShowMoneyLogPage(title)
+                }
+                else if (sel = "Zurück" && MLOG_INDEX > 1) {
+                    MLOG_INDEX--
+                    ShowMoneyLogPage(title)
+                }
+
+                return
+            }
+        
+
+
+
+        if !IsDialogOpen() || GetKeyState("Esc")
+            return
+        }
+    }
+
+
+
+
+ShowCurrentPage(title) {
+    global CP_PAGES, CP_PAGE_INDEX
+
+    txt := CP_PAGES[CP_PAGE_INDEX]
+
+    btn1 := (CP_PAGE_INDEX > 1) ? "Zurück" : ""
+    btn2 := (CP_PAGE_INDEX < CP_PAGES.MaxIndex()) ? "Weiter" : "Schließen"
+
+    ShowDialog(5, title " (" CP_PAGE_INDEX "/" CP_PAGES.MaxIndex() ")", txt, btn2, btn1)
+
+    Loop {
+        if IsDialogButton1Clicked()() { ; Weiter / Schließen
+            Sleep, 120
+            if !IsDialogOpen() {
+                if (CP_PAGE_INDEX < CP_PAGES.MaxIndex()) {
+                    CP_PAGE_INDEX++
+                    ShowCurrentPage(title)
+                }
+                return
+            }
+        }
+/*
+
+
+        if IsDialogButton2Selected() { ; Zurück
+            Sleep, 120
+            if !IsDialogOpen() {
+                if (CP_PAGE_INDEX > 1) {
+                    CP_PAGE_INDEX--
+                    ShowCurrentPage(title)
+                }
+                return
+            }
+        }
+*/
+        if !IsDialogOpen() || GetKeyState("Esc") {
+            return
+        }
+    }
+}
+
+
+BuildTestPages() {
+    header := "Datum`tDifferenz`tBeteiligter`tGrund`n"
+
+    page1 := header
+    page1 .= " `t `t `tVor`n"
+    page1 .= "`n"   
+    page1 .= "1.1`t+100`tTestA`tGrund A`n"
+    page1 .= "1.2`t-50`tTestB`tGrund B`n"
+
+    page2 := header
+    page2 .= " `t `t `tVor`n"
+    page2 .= "Zurück`n" 
+    page2 .= " `n"
+    page2 .= "2.1`t+200`tTestC`tGrund C`n"
+    page2 .= "2.2`t-10`tTestD`tGrund D`n"
+
+    page3 := header
+    page3 .= "Zurück`n"
+    page3 .= "n"
+    page3 .= "3.1`t+999`tTestE`tGrund E`n"
+    page3 .= "3.2`t-123`tTestF`tGrund F`n"
+
+    pages := []
+    pages.Push(AddFooter(page1, false, true))  ; Seite 1: kein Zurück, aber Vor
+    pages.Push(AddFooter(page2, true, true))   ; Seite 2: Vor + Zurück
+    pages.Push(AddFooter(page3, true, false))  ; Seite 3: Zurück, kein Vor
+
+    return pages
+}
+
+global TEST_PAGES := []
+global TEST_INDEX := 1
+
+ShowTestPaged(title, pages) {
+    global TEST_PAGES, TEST_INDEX
+    TEST_PAGES := pages
+    TEST_INDEX := 1
+    ShowTestPage(title)
+}
+
+ShowTestPage(title) {
+    global TEST_PAGES, TEST_INDEX
+
+    txt := TEST_PAGES[TEST_INDEX]
+
+    ; Button 1 = Auswählen (Vor/Zurück)
+    ; Button 2 = Schließen
+    ShowDialog(5, title " (" TEST_INDEX "/" TEST_PAGES.MaxIndex() ")", txt, "Auswählen", "Schließen")
+
+Loop {
+    
+                sel := Trim(GetDialogLine(GetDialogIndex()))
+        if IsDialogButton1Clicked() {
+            ;Sleep, 120
+        
+                AddChatMessage(sel)
+                AddChatMessage(GetDialogText())
+                if (InStr(sel, "vor") && MLOG_INDEX < MLOG_PAGES.MaxIndex()) {
+                    MLOG_INDEX++
+                    ShowMoneyLogPage(title)
+                }
+                else if (sel = "Zurück" && MLOG_INDEX > 1) {
+                    MLOG_INDEX--
+                    ShowMoneyLogPage(title)
+                }
+
+                return
+            }
+        
+
+
+
+        if !IsDialogOpen() || GetKeyState("Esc")
+            return
+        }
+}

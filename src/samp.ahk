@@ -3008,6 +3008,67 @@ IsDialogButton1Selected() {
 	ErrorLevel := ERROR_OK
 	return selected
 }
+IsDialogButton1Clicked() {
+	dwPointer := GetDialogStructPtr()
+	if (ErrorLevel || !dwPointer)
+		return false
+
+	dwPointer := readDWORD(hGTA, dwPointer + SAMP_DIALOG_PTR1_OFFSET)
+	if (ErrorLevel) {
+		ErrorLevel := ERROR_READ_MEMORY
+		return false
+	}
+
+	selected := readMem(hGTA, dwPointer + SAMP_DIALOG_BUTTON_CLICKED_OFFSET, 1, "Byte")
+	if (ErrorLevel) {
+		ErrorLevel := ERROR_READ_MEMORY
+		return false
+	}
+
+	ErrorLevel := ERROR_OK
+	return selected
+}
+
+IsDialogButton2Selected() {
+	dwPointer := GetDialogStructPtr()
+	if (ErrorLevel || !dwPointer)
+		return false
+
+	dwPointer := readDWORD(hGTA, dwPointer + SAMP_DIALOG_PTR1_OFFSET)
+	if (ErrorLevel) {
+		ErrorLevel := ERROR_READ_MEMORY
+		return false
+	}
+
+	selected := readMem(hGTA, dwPointer + SAMP_DIALOG_BUTTON_HOVERING_OFFSET, 1, "Byte")
+	if (ErrorLevel) {
+		ErrorLevel := ERROR_READ_MEMORY
+		return false
+	}
+
+	ErrorLevel := ERROR_OK
+	return selected
+}
+IsDialogButton2Clicked() {
+	dwPointer := GetDialogStructPtr()
+	if (ErrorLevel || !dwPointer)
+		return false
+
+	dwPointer := readDWORD(hGTA, dwPointer + SAMP_DIALOG_PTR1_OFFSET)
+	if (ErrorLevel) {
+		ErrorLevel := ERROR_READ_MEMORY
+		return false
+	}
+
+	selected := readMem(hGTA, dwPointer + SAMP_DIALOG_BUTTON_CLICKED_OFFSET, 1, "Byte")
+	if (ErrorLevel) {
+		ErrorLevel := ERROR_READ_MEMORY
+		return false
+	}
+
+	ErrorLevel := ERROR_OK
+	return selected
+}
 
 /**
  * Get all lines from the currently opened dialog.
@@ -3124,7 +3185,7 @@ ShowDialog(style, caption, text, button1, button2 := "", id := 1) {
 	NumPut(0xE8, injectData, 40, "UChar")							;40 + 1 ;call
 	offset := dwFunc - (pInjectFunc + 45)
 	NumPut(offset, injectData, 41, "Int")							;41 + 4
-	NumPut(0xC3, injectData, 45, "UChar")							;45 + 1	;retn
+	NumPut(0xC3, injectData, 45, "UChar")	
 
 	writeRaw(hGTA, pInjectFunc, &injectData, dwLen)
 	if (ErrorLevel)

@@ -13,3 +13,6 @@
 #Include %A_ScriptDir%\src\factions.ahk
 #Include %A_ScriptDir%\src\cp_moneylog.ahk
 #Include %A_ScriptDir%\src\cp_tickets.ahk
+#Include %A_ScriptDir%\src\join.ahk
+#Include %A_ScriptDir%\src\cp_skins.ahk
+#Include %A_ScriptDir%\src\cp_gang_war.ahk

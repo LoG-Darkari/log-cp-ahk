@@ -2,15 +2,15 @@ BuildLeaderObjects()
 {
     factions := []
 
-    AddFaction(factions, "Los Santos Police Department", "xKORE", "6495ED")
-    AddFaction(factions, "Federal Bureau of Investigation", "JohnHunt", "1111FF") ;1111FF 1650BB
+    AddFaction(factions, "Los Santos Police Department", "KevKev", "6495ED")
+    AddFaction(factions, "LLos Santos Police Department", "JohnHunt", "1111FF") ;1111FF 1650BB
     AddFaction(factions, "United States Army", "AirMake", "33CC00")
     AddFaction(factions, "United States Army", "aviate", "33CC00")
     AddFaction(factions, "Los Santos Medical Department", ".NoNaMe", "FF3333")
     AddFaction(factions, "San Andreas Logistik und Abschleppdienst", "Tobi_Gafas", "FFFF00")
     AddFaction(factions, "Grove Street Families", "ChinG", "006600")
     AddFaction(factions, "Front Yard Ballas", "Division39MID", "660066")
-    AddFaction(factions, "Triaden Mafia", "Martin_", "FFFF80")
+    AddFaction(factions, "Russen Mafia", "Acorus", "666666")
     AddFaction(factions, "Yakuza Mafia", "hope", "DB7B9D")
     AddFaction(factions, "Terroristen", "Verde", "795F37")
     AddFaction(factions, "Hitman Agency", "OpTiMaLZz", "993300")
